@@ -1,7 +1,7 @@
 class Api::MenusController < ApplicationController
 
   def index
-    render json: Menu.all
+    render json: Menu.getItemsHash
   end
 
   def create
@@ -9,7 +9,7 @@ class Api::MenusController < ApplicationController
     if Menu.save
       render json: menu
     else
-      render json: { errors: menu.errors }
+      render json: { errors: menu.errors }, status: :unprocessable_entity 
     end
   end
 

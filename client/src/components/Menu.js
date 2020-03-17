@@ -1,63 +1,55 @@
-import React from 'react';
-import axios from 'axios'
-import { Checkbox, Header, Button, Icon, } from "semantic-ui-react";
+import React from "react";
+import { Accordion, Icon, Button, } from "semantic-ui-react";
+import ItemForm from "./ItemForm";
 
-export default class Menu extends React.Component {
-  state = {
-    items: []
-  }
-  componentDidMount() {
-    axios.get(`/api/menus/${this.props.id}/items`)
-    .then( res => {
-      console.log(res)
-      this.setState({ items: res.data, })
-    })
-    .catch( err => {
-      console.log(err)
-    })
-  }
-  render() {
-    const { id, complete, name, updateMenu, deleteMenu } = this.props
-    return (
-      <div style={styles.flex}>
-        <div style={styles.flex}>
-          <Checkbox
-            defaultChecked={complete}
-            onClick={() => updateMenu(id)}
-          />
-          <div style={complete ? styles.complete : {}} className="center">
-            <Header as="h2" style={{ marginLeft: "15px", }}>{name}</Header>
+const Menu = ({
+  name,
+  menu_id,
+  items,
+  handleAccordionClick,
+  accordionIndex,
+  activeIndex,
+  addItem,
+  updateMenu,
+  deleteMenu
+}) => {
+  return (
+    <h2>
+      <Accordion.Title
+        active={activeIndex === accordionIndex}
+        index={accordionIndex}
+        onClick={handleAccordionClick}
+      >
+        <Icon name="dropdown" />
+      {`${name}`}
+      </Accordion.Title>
+      <Accordion.Content active={activeIndex === accordionIndex}>
+        <h4>{items.map( item => (
+          <div key={item.id}>
+            {`${item.name}`}
           </div>
-        </div>
+        ))}</h4>
+        <ItemForm menuId={menu_id} addItem={addItem} />
+      </Accordion.Content >
         <Button
           icon
           color="red"
           size="tiny"
-          onClick={() => deleteMenu(id)}
-          style={{ marginLeft: "15px", }}
-        >
+          onClick={() => deleteMenu(menu_id)}
+          style={{ marginLeft: "15px", }}>
           <Icon name="trash" />
-
-        
-
         </Button>
-        {this.state.items.map( i => i.name)}
-      </div>
-    )
-  }
-}
+        <Button
+          icon
+          color="blue"
+          size="tiny"
+          onClick={() => updateMenu(menu_id)}
+          style={{ marginLeft: "15px", }}>
+          <Icon name="pencil" />
+        </Button>
+        </h2>
+  )};
+
+    export default Menu; 
 
 
-const styles = {
-  complete: {
-    textDecoration: "line-through",
-    color: "grey",
-  },
-  pointer: {
-    cursor: "pointer",
-  },
-  flex: {
-    display: "flex",
-    alignItems: "center",
-  },
-};

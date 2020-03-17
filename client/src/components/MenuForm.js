@@ -4,29 +4,33 @@ import { Form, } from "semantic-ui-react";
 class MenuForm extends React.Component {
   state = { name: "", };
 
-  handleChange = (e) => {
-    this.setState({ name: e.target.value, });
-  }
+  handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.addItem(this.state.name);
-    this.setState({ name: "", });
+  handleSubmit = () => {
+    const { name } = this.state
+    this.props.addMenu(name)
+    this.setState({ name: '' })
   }
 
   render() {
+    const { name } = this.state
+
     return (
-      <Form onSubmit={this.handleSubmit}>
-        <Form.Input
-          label="Menu"
-          placeholder="Add A Menu"
-          required
-          value={this.state.name}
-          onChange={this.handleChange}
-        />
-      </Form>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Group>
+            <Form.Input
+              placeholder='Menu Name'
+              name='name'
+              value={name}
+              onChange={this.handleChange}
+            />
+
+            <Form.Button content='Submit' />
+          </Form.Group>
+        </Form>
     )
   }
 }
+
 
 export default MenuForm;
